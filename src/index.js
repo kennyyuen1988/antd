@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Layout, Menu, Button, PageHeader, Breadcrumb, Descriptions } from 'antd';
+import { Layout, Menu, Button, PageHeader, Breadcrumb, Tabs } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -12,6 +12,12 @@ import {
 } from '@ant-design/icons';
 
 const { Header, Sider, Content, Footer } = Layout;
+
+const { TabPane } = Tabs;
+
+function callback(key) {
+  console.log(key);
+}
 
 class SiderDemo extends React.Component {
   state = {
@@ -58,27 +64,43 @@ class SiderDemo extends React.Component {
             </Breadcrumb>
             <PageHeader
                 ghost={false}
-                onBack={() => window.history.back()}
-                title="Title"
-                subTitle="This is a subtitle"
+                title="活動專題"
                 extra={[
-                  <Button key="3">Operation</Button>,
-                  <Button key="2">Operation</Button>,
                   <Button key="1" type="primary">
-                    Primary
+                    新增專題
                   </Button>,
                 ]}
               ></PageHeader>
+
           </Header>
           <Content
             className="site-layout-background"
             style={{
-              margin: '24px 16px',
-              padding: 24,
+              margin: 0,
+              padding: 0,
               minHeight: 280,
             }}
           >
-            Content
+            
+
+            <Tabs defaultActiveKey="1" size={"large"} onChange={callback}>
+              <TabPane tab="專題列表" key="1">
+                
+                <PageHeader
+                    ghost={false}
+                    title="顯示在主頁的專題"
+                    extra={[
+                      <Button key="1" type="primary">
+                        儲存並發佈
+                      </Button>,
+                    ]}
+                  ></PageHeader>
+              </TabPane>
+              <TabPane tab="主頁專題管理" key="2">
+                Content of Tab Pane 2
+              </TabPane>
+            </Tabs>
+
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
         </Layout>
