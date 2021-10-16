@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Layout, Menu, Button, PageHeader, Breadcrumb, Tabs } from 'antd';
+import { Layout, Menu, Button, PageHeader, Breadcrumb, Tabs, Table } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -11,9 +11,71 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 
+//Date
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+import locale from 'antd/lib/locale/zh_CN';
+
 const { Header, Sider, Content, Footer } = Layout;
 
 const { TabPane } = Tabs;
+
+const columns = [
+  {
+    title: '排序',
+    width: 100,
+    dataIndex: 'ordering',
+    key: 'ordering',
+    fixed: 'left',
+  },
+  {
+    title: '活動專題編號',
+    width: 150,
+    dataIndex: 'campaignCodeNum',
+    key: 'campaignCodeNum',
+    fixed: 'left',
+  },
+  {
+    title: '專題名稱',
+    dataIndex: 'campaginName',
+    key: '1',
+  },
+  {
+    title: '開始刊登日期',
+    dataIndex: 'startDate',
+    key: '2',
+  },
+  {
+    title: '結束刊登日期',
+    dataIndex: 'endDate',
+    key: '3',
+  },
+  {
+    title: '狀態',
+    dataIndex: 'status',
+    key: '4',
+    render: () => <div className="formStatus">刊登中</div>,
+  },
+  {
+    title: '操作',
+    key: 'operation',
+    fixed: 'right',
+    width: 150,
+    render: () => <div className="tbl_multiAction"><a>編輯</a><a className="alertText">移除</a></div>,
+  },
+];
+
+const data = [];
+for (let i = 0; i < 100; i++) {
+  data.push({
+    key: i,
+    ordering: i+1,
+    campaignCodeNum: `TH00000${i}`,
+    campaginName: `成為時間管理大師 ${i}`,
+    startDate: `${moment(new Date()).format("DD/MM/YYYY")}`,
+    endDate: `${moment(new Date()).add(+5, 'day').format("DD/MM/YYYY")}`,
+  });
+}
 
 function callback(key) {
   console.log(key);
@@ -95,6 +157,7 @@ class SiderDemo extends React.Component {
                       </Button>,
                     ]}
                   ></PageHeader>
+                <Table columns={columns} dataSource={data} scroll={{ x: "auto", y: 600 }} style={{padding:24}}/>
               </TabPane>
               <TabPane tab="主頁專題管理" key="2">
                 Content of Tab Pane 2
