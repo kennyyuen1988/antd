@@ -14,7 +14,6 @@ import {
 //Date
 import moment from 'moment';
 import 'moment/locale/zh-cn';
-import locale from 'antd/lib/locale/zh_CN';
 import reqwest from 'reqwest';
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -62,7 +61,7 @@ const columns = [
     key: 'operation',
     fixed: 'right',
     width: 150,
-    render: () => <div className="tbl_multiAction"><a>編輯</a><a className="alertText">移除</a></div>,
+    render: () => <div className="tbl_multiAction"><a href="true">編輯</a><a href="true" className="alertText">移除</a></div>,
   },
 ];
 
@@ -173,7 +172,7 @@ class SiderDemo extends React.Component {
       <Layout>
         <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
           <div className="logo" >
-            <img src="./img/hk01logo/hk01-logo@2x.png" />
+            <img src="./img/hk01logo/hk01-logo@2x.png" alt="hk01" />
           </div>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
             <Menu.Item key="1" icon={<UnorderedListOutlined />}>
@@ -196,7 +195,7 @@ class SiderDemo extends React.Component {
 
             <Breadcrumb>
               <Breadcrumb.Item>
-                <a href="">01空間設定</a>
+                <a href="true">01空間設定</a>
               </Breadcrumb.Item>
               <Breadcrumb.Item>活動專題</Breadcrumb.Item>
             </Breadcrumb>
