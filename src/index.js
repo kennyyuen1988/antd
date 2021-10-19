@@ -14,7 +14,8 @@ import {
 //Date
 import moment from 'moment';
 import 'moment/locale/zh-cn';
-import locale from 'antd/lib/locale/zh_CN';
+//import locale from 'antd/lib/locale/zh_CN';
+import reqwest from 'reqwest';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -61,7 +62,7 @@ const columns = [
     key: 'operation',
     fixed: 'right',
     width: 150,
-    render: () => <div className="tbl_multiAction"><a>編輯</a><a className="alertText">移除</a></div>,
+    render: () => <div className="tbl_multiAction"><a href="true">編輯</a><a href="true" className="alertText">移除</a></div>,
   },
 ];
 
@@ -77,6 +78,35 @@ for (let i = 0; i < 100; i++) {
   });
 }
 
+const columns2 = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    sorter: true,
+    render: name => `${name.first} ${name.last}`,
+    width: '20%',
+  },
+  {
+    title: 'Gender',
+    dataIndex: 'gender',
+    filters: [
+      { text: 'Male', value: 'male' },
+      { text: 'Female', value: 'female' },
+    ],
+    width: '20%',
+  },
+  {
+    title: 'Email',
+    dataIndex: 'email',
+  },
+];
+
+const getRandomuserParams = params => ({
+  results: params.pagination.pageSize,
+  page: params.pagination.current,
+  ...params,
+});
+
 function callback(key) {
   console.log(key);
 }
@@ -84,6 +114,12 @@ function callback(key) {
 class SiderDemo extends React.Component {
   state = {
     collapsed: false,
+    data2: [],
+    pagination: {
+      current: 1,
+      pageSize: 10,
+    },
+    loading: false,
   };
 
   toggle = () => {
@@ -92,12 +128,53 @@ class SiderDemo extends React.Component {
     });
   };
 
+//api table
+
+componentDidMount() {
+  const { pagination } = this.state;
+  this.fetch({ pagination });
+}
+
+handleTableChange = (pagination, filters, sorter) => {
+  this.fetch({
+    sortField: sorter.field,
+    sortOrder: sorter.order,
+    pagination,
+    ...filters,
+  });
+};
+
+fetch = (params = {}) => {
+  this.setState({ loading: true });
+  reqwest({
+    url: 'https://randomuser.me/api',
+    method: 'get',
+    type: 'json',
+    data2: getRandomuserParams(params),
+  }).then(data2 => {
+    console.log(data2);
+    this.setState({
+      loading: false,
+      data2: data2.results,
+      pagination: {
+        ...params.pagination,
+        total: 200,
+        // 200 is mock data, you should read it from server
+        // total: data.totalCount,
+      },
+    });
+  });
+};
+//api table end
+
+
   render() {
+    const { data2, pagination, loading } = this.state;
     return (
       <Layout>
         <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
           <div className="logo" >
-            <img src="./img/hk01logo/hk01-logo@2x.png" />
+            <img src="./img/hk01logo/hk01-logo@2x.png" alt="hk01"/>
           </div>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
             <Menu.Item key="1" icon={<UnorderedListOutlined />}>
@@ -120,7 +197,7 @@ class SiderDemo extends React.Component {
 
             <Breadcrumb>
               <Breadcrumb.Item>
-                <a href="">01空間設定</a>
+                <a href="true">01空間設定</a>
               </Breadcrumb.Item>
               <Breadcrumb.Item>活動專題</Breadcrumb.Item>
             </Breadcrumb>
@@ -160,7 +237,14 @@ class SiderDemo extends React.Component {
                 <Table columns={columns} dataSource={data} scroll={{ x: "auto", y: 600 }} style={{padding:24}}/>
               </TabPane>
               <TabPane tab="主頁專題管理" key="2">
-                Content of Tab Pane 2
+                <Table
+                  columns={columns2}
+                  rowKey={record => record.login.uuid}
+                  dataSource={data2}
+                  pagination={pagination}
+                  loading={loading}
+                  onChange={this.handleTableChange}
+                />
               </TabPane>
             </Tabs>
 
